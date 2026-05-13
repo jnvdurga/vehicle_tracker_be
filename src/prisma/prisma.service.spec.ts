@@ -5,8 +5,17 @@ describe('PrismaService', () => {
   let service: PrismaService;
 
   beforeEach(async () => {
+    // Mock the PrismaService to avoid database connection during tests
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PrismaService],
+      providers: [
+        {
+          provide: PrismaService,
+          useValue: {
+            $connect: jest.fn(),
+            $disconnect: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<PrismaService>(PrismaService);
